@@ -1,0 +1,12 @@
+/.bin
+/dist
+.env*
+!/.env.example
+/infra/deploy/service*
+/infra/deploy/migrate-tool*
+/infra/deploy/*.json
+__debug_bin*
+/gen
+/*.pem
+*.db
+*.xml
