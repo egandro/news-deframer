@@ -1,5 +1,7 @@
 package openai
 
+//go:generate mockgen -destination=./mock_openai/mocks.go github.com/egandro/news-deframer/pkg/openai OpenAI
+
 import (
 	"context"
 	"testing"

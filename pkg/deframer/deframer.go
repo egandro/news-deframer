@@ -7,14 +7,17 @@ import (
 	"github.com/egandro/news-deframer/pkg/source"
 )
 
-type Deframer struct {
+type deframer struct {
 	db  *database.Database
-	ai  *openai.OpenAI
+	ai  openai.OpenAI
 	src *source.Source
 }
 
+type Deframer interface {
+}
+
 // NewDeframer initializes a new deframer
-func NewDeframer() (*Deframer, error) {
+func NewDeframer() (Deframer, error) {
 	cfg, err := config.GetConfig()
 	if err != nil {
 		return nil, err
@@ -32,7 +35,7 @@ func NewDeframer() (*Deframer, error) {
 		return nil, err
 	}
 
-	res := &Deframer{
+	res := &deframer{
 		db:  db,
 		ai:  ai,
 		src: src,

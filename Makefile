@@ -72,4 +72,3 @@ push:
 .PHONY: run-container
 run-container: package
 	docker run -p 8080:8080 --rm -it --name $(CI_PROJECT_NAME) $(CI_REGISTRY_IMAGE):latest
-

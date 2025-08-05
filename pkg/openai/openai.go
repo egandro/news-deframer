@@ -12,15 +12,20 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 )
 
-// OpenAI handles AI operation
-type OpenAI struct {
+type openAI struct {
 	client *openai.Client
 	model  string
 }
 
+// OpenAI handles AI operation
+type OpenAI interface {
+	Query(ctx context.Context, user string, system string) (string, error)
+	FuzzyParseJSON(input string) (interface{}, error)
+}
+
 // NewAI
-func NewAI(url string, model string, token string) *OpenAI {
-	res := &OpenAI{
+func NewAI(url string, model string, token string) OpenAI {
+	res := &openAI{
 		model: model,
 	}
 
@@ -39,7 +44,7 @@ func NewAI(url string, model string, token string) *OpenAI {
 	return res
 }
 
-func (a *OpenAI) Query(ctx context.Context, user string, system string) (string, error) {
+func (a *openAI) Query(ctx context.Context, user string, system string) (string, error) {
 	resp, err := a.client.CreateChatCompletion(
 		ctx,
 		openai.ChatCompletionRequest{
@@ -64,24 +69,7 @@ func (a *OpenAI) Query(ctx context.Context, user string, system string) (string,
 	return resp.Choices[0].Message.Content, nil
 }
 
-func cleanInput(input string) string {
-	input = strings.TrimSpace(input)
-
-	// Remove markdown ```json or ``` code blocks
-	input = strings.TrimPrefix(input, "```json")
-	input = strings.TrimPrefix(input, "```")
-	input = strings.TrimSuffix(input, "```")
-
-	input = strings.TrimSpace(input)
-
-	// Match and remove "json" or "JSON" at the beginning, even if followed directly by JSON
-	re := regexp.MustCompile(`(?i)^json\s*`)
-	input = re.ReplaceAllString(input, "")
-
-	return strings.TrimSpace(input)
-}
-
-func (a *OpenAI) FuzzyParseJSON(input string) (interface{}, error) {
+func (a *openAI) FuzzyParseJSON(input string) (interface{}, error) {
 	cleaned := cleanInput(input)
 
 	// Step 1: Try to isolate the part where JSON begins
@@ -102,4 +90,21 @@ func (a *OpenAI) FuzzyParseJSON(input string) (interface{}, error) {
 	}
 
 	return result, nil
+}
+
+func cleanInput(input string) string {
+	input = strings.TrimSpace(input)
+
+	// Remove markdown ```json or ``` code blocks
+	input = strings.TrimPrefix(input, "```json")
+	input = strings.TrimPrefix(input, "```")
+	input = strings.TrimSuffix(input, "```")
+
+	input = strings.TrimSpace(input)
+
+	// Match and remove "json" or "JSON" at the beginning, even if followed directly by JSON
+	re := regexp.MustCompile(`(?i)^json\s*`)
+	input = re.ReplaceAllString(input, "")
+
+	return strings.TrimSpace(input)
 }
