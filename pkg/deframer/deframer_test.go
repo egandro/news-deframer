@@ -1,6 +1,7 @@
 package deframer
 
 import (
+	_ "embed"
 	"testing"
 
 	"github.com/egandro/news-deframer/pkg/database"
@@ -10,6 +11,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
+
+//go:embed testing/feed.xml.testing
+var rssContent string
+
+//go:embed testing/source.json
+var sourceContent string
 
 func setupTestDeframer(t *testing.T, ai openai.OpenAI, src *source.Source) (Deframer, error) {
 	// Use in-memory SQLite for testing
@@ -33,8 +40,10 @@ func TestNewDeframer(t *testing.T) {
 
 	openAIMock := mock_openai.NewMockOpenAI(ctrl)
 
-	s, err := setupTestDeframer(t, openAIMock, nil)
+	source, err := source.ParseString(sourceContent)
+
+	d, err := setupTestDeframer(t, openAIMock, source)
 	//s, err := NewDeframer()
 	assert.NoError(t, err)
-	assert.NotNil(t, s, "Deframer should be initialized")
+	assert.NotNil(t, d, "Deframer should be initialized")
 }
