@@ -10,6 +10,7 @@ import (
 	"github.com/egandro/news-deframer/pkg/openai"
 	"github.com/egandro/news-deframer/pkg/openai/mock_openai"
 	"github.com/egandro/news-deframer/pkg/source"
+	"github.com/mmcdole/gofeed"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -23,13 +24,16 @@ var sourceContent string
 func setupTestDeframer(t *testing.T, ai openai.OpenAI, src *source.Source, downloader downloader.Downloader) (Deframer, error) {
 	// Use in-memory SQLite for testing
 	db, err := database.NewDatabase(":memory:")
+	//db, err := database.NewDatabase("./test.db")
 	if err != nil {
 		t.Fatalf("Failed to create test database: %v", err)
 	}
 
 	prompts := make(map[string]source.Prompt)
-	for _, prompt := range src.Prompts {
-		prompts[prompt.Language] = prompt
+	if src != nil {
+		for _, prompt := range src.Prompts {
+			prompts[prompt.Language] = prompt
+		}
 	}
 
 	res := &deframer{
@@ -61,17 +65,42 @@ func TestNewUpdateFeeds(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	openAIMock := mock_openai.NewMockOpenAI(ctrl)
 	source, err := source.ParseString(sourceContent)
 	downloaderMock := mock_downloader.NewMockDownloader(ctrl)
 	downloaderMock.EXPECT().DownloadRSSFeed(gomock.Any()).Return(rssContent, nil).Times(1)
 
-	d, err := setupTestDeframer(t, openAIMock, source, downloaderMock)
+	d, err := setupTestDeframer(t, nil, source, downloaderMock)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, d, "Deframer should be initialized")
 
-	err = d.UpdateFeeds()
+	expected := 1
+	count, err := d.UpdateFeeds()
+	assert.NoError(t, err)
+	assert.Equal(t, count, expected)
+
+	// 2nd call - it should take the data from the cache
+	expected = 0
+	count, err = d.UpdateFeeds()
+	assert.NoError(t, err)
+	assert.Equal(t, count, expected)
+}
+
+func TestDeframe(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	openAIMock := mock_openai.NewMockOpenAI(ctrl)
+	d, err := setupTestDeframer(t, openAIMock, nil, nil)
+
+	assert.NoError(t, err)
+	assert.NotNil(t, d, "Deframer should be initialized")
+
+	parser := gofeed.NewParser()
+	parsedData, err := parser.ParseString(string(rssContent))
 	assert.NoError(t, err)
 
+	str, err := d.Deframe(parsedData)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, str, "")
 }

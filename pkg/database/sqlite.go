@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"time"
 
 	"gorm.io/driver/sqlite"
@@ -26,6 +27,7 @@ type Item struct {
 type Cache struct {
 	gorm.Model
 	FeedUrl string `gorm:"type:text;uniqueIndex;not null"`
+	Title   string `gorm:"type:text;not null"`
 	Cache   string `gorm:"type:text;not null"`
 }
 
@@ -105,8 +107,15 @@ func (d *Database) FindCacheByFeedUrl(feedUrl string, maxAge time.Duration) (*Ca
 	err := d.db.
 		Where("feed_url = ? AND updated_at >= ?", feedUrl, cutoff).
 		First(&cache).Error
+
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// No matching record found, return nil without error
+			return nil, nil
+		}
+		// Other errors should be returned
 		return nil, err
 	}
+
 	return &cache, nil
 }

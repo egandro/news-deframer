@@ -180,6 +180,7 @@ func TestCreateCache(t *testing.T) {
 
 	cache := &Cache{
 		FeedUrl: "https://example.com/rss",
+		Title:   "dummy title",
 		Cache:   "<rss>initial content</rss>",
 	}
 
@@ -213,6 +214,7 @@ func TestFindCacheByFeedUrl(t *testing.T) {
 	// Insert a cache entry with UpdatedAt = now (done by gorm)
 	cache := &Cache{
 		FeedUrl: "https://example.com/rss",
+		Title:   "dummy title",
 		Cache:   "<rss>some content</rss>",
 	}
 	err := d.CreateCache(cache)
@@ -231,11 +233,11 @@ func TestFindCacheByFeedUrl(t *testing.T) {
 
 	// Case 2: maxAge too small, entry should NOT be found
 	found, err = d.FindCacheByFeedUrl(cache.FeedUrl, time.Nanosecond)
-	assert.Error(t, err)
+	assert.NoError(t, err)
 	assert.Nil(t, found)
 
-	// Case 3: Non-existent FeedUrl returns error
+	// Case 3: Non-existent FeedUrl returns nil
 	found, err = d.FindCacheByFeedUrl("nonexistent", time.Minute*5)
-	assert.Error(t, err)
+	assert.NoError(t, err)
 	assert.Nil(t, found)
 }
