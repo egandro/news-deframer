@@ -12,6 +12,7 @@ import (
 	"syscall"
 
 	service "github.com/egandro/news-deframer"
+	private "github.com/egandro/news-deframer/gen/private"
 	web "github.com/egandro/news-deframer/gen/web"
 	"goa.design/clue/debug"
 	"goa.design/clue/log"
@@ -24,6 +25,7 @@ func main() {
 		hostF     = flag.String("host", "default", "Server host (valid values: default)")
 		domainF   = flag.String("domain", "", "Host domain name (overrides host domain specified in service design)")
 		httpPortF = flag.String("http-port", "", "HTTP port (overrides host HTTP port specified in service design)")
+		grpcPortF = flag.String("grpc-port", "", "gRPC port (overrides host gRPC port specified in service design)")
 		secureF   = flag.Bool("secure", false, "Use secure scheme (https or grpcs)")
 		dbgF      = flag.Bool("debug", false, "Log request and response bodies")
 	)
@@ -44,18 +46,24 @@ func main() {
 
 	// Initialize the services.
 	var (
-		webSvc web.Service
+		privateSvc private.Service
+		webSvc     web.Service
 	)
 	{
+		privateSvc = service.NewPrivate()
 		webSvc = service.NewWeb()
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		webEndpoints *web.Endpoints
+		privateEndpoints *private.Endpoints
+		webEndpoints     *web.Endpoints
 	)
 	{
+		privateEndpoints = private.NewEndpoints(privateSvc)
+		privateEndpoints.Use(debug.LogPayloads())
+		privateEndpoints.Use(log.Endpoint)
 		webEndpoints = web.NewEndpoints(webSvc)
 		webEndpoints.Use(debug.LogPayloads())
 		webEndpoints.Use(log.Endpoint)
@@ -100,7 +108,31 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, webEndpoints, &wg, errc, *dbgF)
+			handleHTTPServer(ctx, u, privateEndpoints, webEndpoints, &wg, errc, *dbgF)
+		}
+
+		{
+			addr := "grpc://0.0.0.0:8080"
+			u, err := url.Parse(addr)
+			if err != nil {
+				log.Fatalf(ctx, err, "invalid URL %#v\n", addr)
+			}
+			if *secureF {
+				u.Scheme = "grpcs"
+			}
+			if *domainF != "" {
+				u.Host = *domainF
+			}
+			if *grpcPortF != "" {
+				h, _, err := net.SplitHostPort(u.Host)
+				if err != nil {
+					log.Fatalf(ctx, err, "invalid URL %#v\n", u.Host)
+				}
+				u.Host = net.JoinHostPort(h, *grpcPortF)
+			} else if u.Port() == "" {
+				u.Host = net.JoinHostPort(u.Host, "8080")
+			}
+			handleGRPCServer(ctx, u, privateEndpoints, &wg, errc, *dbgF)
 		}
 
 	default:

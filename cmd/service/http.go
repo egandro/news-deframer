@@ -8,7 +8,9 @@ import (
 	"sync"
 	"time"
 
+	privatesvr "github.com/egandro/news-deframer/gen/http/private/server"
 	websvr "github.com/egandro/news-deframer/gen/http/web/server"
+	private "github.com/egandro/news-deframer/gen/private"
 	web "github.com/egandro/news-deframer/gen/web"
 	"goa.design/clue/debug"
 	"goa.design/clue/log"
@@ -17,7 +19,7 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, webEndpoints *web.Endpoints, wg *sync.WaitGroup, errc chan error, dbg bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, privateEndpoints *private.Endpoints, webEndpoints *web.Endpoints, wg *sync.WaitGroup, errc chan error, dbg bool) {
 
 	// Provide the transport specific request decoder and response encoder.
 	// The goa http package has built-in support for JSON, XML and gob.
@@ -46,14 +48,17 @@ func handleHTTPServer(ctx context.Context, u *url.URL, webEndpoints *web.Endpoin
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		webServer *websvr.Server
+		privateServer *privatesvr.Server
+		webServer     *websvr.Server
 	)
 	{
 		eh := errorHandler(ctx)
+		privateServer = privatesvr.New(privateEndpoints, mux, dec, enc, eh, nil)
 		webServer = websvr.New(webEndpoints, mux, dec, enc, eh, nil)
 	}
 
 	// Configure the mux.
+	privatesvr.Mount(mux, privateServer)
 	websvr.Mount(mux, webServer)
 
 	var handler http.Handler = mux
@@ -69,6 +74,9 @@ func handleHTTPServer(ctx context.Context, u *url.URL, webEndpoints *web.Endpoin
 	// Start HTTP server using default configuration, change the code to
 	// configure the server as required by your service.
 	srv := &http.Server{Addr: u.Host, Handler: handler, ReadHeaderTimeout: time.Second * 60}
+	for _, m := range privateServer.Mounts {
+		log.Printf(ctx, "HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
+	}
 	for _, m := range webServer.Mounts {
 		log.Printf(ctx, "HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}

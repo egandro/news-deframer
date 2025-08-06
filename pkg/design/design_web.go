@@ -39,12 +39,21 @@ var _ = Service("web", func() {
 
 		HTTP(func() {
 			GET("/feed/{feed_id}")
-			Response(StatusOK, func() {
-				ContentType("application/rss+xml")
+			SkipResponseBodyEncodeDecode()
+			Response(func() {
+				Header("length:Content-Length") // Map length to Content-Length header
+				Header("type:Content-Type")     // Map type to Content-Type header
 			})
 		})
 
 		Error("invalid_feed_id")
-		Result(String)
+
+		Result(func() {
+			// We'll return the file size in the Content-Length header
+			Attribute("length", Int64, "Content length in bytes")
+			Attribute("type", String, "Content type")
+			Required("length", "type")
+		})
+
 	})
 })
