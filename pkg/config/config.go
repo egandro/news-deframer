@@ -6,6 +6,8 @@ import (
 )
 
 type Configuration struct {
+	HttpPort     string `required:"false" envconfig:"HTTP_PORT"`
+	DebugLog     bool   `required:"false" envconfig:"DEBUG_LOG" default:"false"`
 	DatabaseFile string `required:"true" envconfig:"DATABASE_FILE" default:"/data/sqlite.db"`
 	Source       string `required:"true" envconfig:"SOURCE_FILE" default:"/data/source.json"`
 	AI_URL       string `required:"true" envconfig:"AI_URL"`

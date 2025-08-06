@@ -46,7 +46,7 @@ tidy:
 
 .PHONY: gen
 gen:
-	#goa gen github.com/egandro/news-deframer/pkg/design
+	goa gen github.com/egandro/news-deframer/pkg/design
 	go mod tidy
 	go generate ./...
 
