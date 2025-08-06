@@ -3,6 +3,7 @@ module github.com/egandro/news-deframer
 go 1.24.4
 
 require (
+	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/gorilla/feeds v1.2.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0

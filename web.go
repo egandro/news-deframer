@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"net/http"
 	"strings"
+	"text/template"
 
 	web "github.com/egandro/news-deframer/gen/web"
+	"github.com/egandro/news-deframer/pkg/deframer"
 	"goa.design/clue/log"
 )
 
@@ -23,7 +24,57 @@ func NewWeb() web.Service {
 // Returns the index page in HTML
 func (s *websrvc) Index(ctx context.Context) (res string, err error) {
 	log.Printf(ctx, "web.index")
-	res = "hello world"
+
+	const tpl = `
+<!DOCTYPE html>
+<html>
+<head><title>{{.Title}}</title></head>
+<body>
+	<h1>{{.Heading}}</h1>
+	{{if .Items}}
+		<ul>
+			{{range .Items}}
+				<li><a href="{{.Href}}">{{.Title}}</a></li>
+			{{end}}
+		</ul>
+	{{else}}
+		<p>No feeds available.</p>
+	{{end}}
+</body>
+</html>`
+
+	d, err := deframer.NewDeframer(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	type Item struct {
+		Href  string
+		Title string
+	}
+
+	items := []Item{}
+
+	caches, err := d.FindAllCaches()
+	if err != nil {
+		return "", err
+	}
+
+	for _, cache := range caches {
+		items = append(items, Item{
+			Href:  fmt.Sprintf("/feed/%v", cache.ID),
+			Title: cache.Title,
+		})
+	}
+
+	data := map[string]any{
+		"Title":   "Deframer",
+		"Heading": "Deframed RSS Feeds",
+		"Items":   items,
+	}
+
+	res, err = renderTemplate(tpl, data)
+
 	return
 }
 
@@ -33,31 +84,39 @@ func (s *websrvc) Feed(ctx context.Context, p *web.FeedPayload) (res *web.FeedRe
 	log.Printf(ctx, "web.feed")
 	//res = "feed " + p.FeedID
 
-	url := "https://www.tagesschau.de/index~rss2.xml"
-
-	response, err := http.Get(url)
+	d, err := deframer.NewDeframer(ctx)
 	if err != nil {
-		panic(err)
-	}
-	defer response.Body.Close()
-
-	if response.StatusCode != http.StatusOK {
-		panic(fmt.Sprintf("HTTP request failed with status %d", response.StatusCode))
+		return res, resp, err
 	}
 
-	body, err := io.ReadAll(response.Body)
+	entry, err := d.FindCacheByID(p.FeedID)
 	if err != nil {
-		panic(err)
+		return res, resp, err
 	}
 
-	rssXML := string(body)
-
-	// res.Type = "application/rss+xml"
 	res.Type = "application/xml;charset=UTF-8"
-	res.Length = int64(len(rssXML))
+	res.Length = int64(len(entry.Cache))
 
 	// resp is the HTTP response body stream.
-	resp = io.NopCloser(strings.NewReader(rssXML))
+	resp = io.NopCloser(strings.NewReader(entry.Cache))
 
 	return
+}
+
+// renderTemplate takes an template string and some data,
+// and returns the rendered template as a string.
+func renderTemplate(tpl string, data any) (string, error) {
+	// Parse the template string
+	t, err := template.New("page").Parse(tpl)
+	if err != nil {
+		return "", err
+	}
+
+	// Execute into a string builder
+	var sb strings.Builder
+	if err := t.Execute(&sb, data); err != nil {
+		return "", err
+	}
+
+	return sb.String(), nil
 }

@@ -67,22 +67,28 @@ func NewDatabase(dbPath string) (*Database, error) {
 
 // CreateItem inserts a new item, ignores if hash already exists
 func (d *Database) CreateItem(item *Item) error {
-	now := time.Now()
-	if item.CreatedAt.IsZero() {
-		item.CreatedAt = now
-	}
-	if item.UpdatedAt.IsZero() {
-		item.UpdatedAt = now
-	}
+	return d.db.Transaction(func(tx *gorm.DB) error {
 
-	return d.db.Exec(
-		`INSERT OR IGNORE INTO items
-		(hash, feed_url, link, guid, title, description, content, framing, title_ai, reason_ai, created_at, updated_at)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-		item.Hash, item.FeedUrl, item.Link, item.Guid, item.Title, item.Description,
-		item.Content, item.Framing, item.TitleAI, item.ReasonAI,
-		item.CreatedAt, item.UpdatedAt,
-	).Error
+		// Try insert with ON CONFLICT DO NOTHING
+		err := tx.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "hash"}},
+			DoNothing: true,
+		}).Create(item).Error
+
+		if err != nil {
+			return err
+		}
+
+		// If no row inserted, fetch existing record
+		if tx.RowsAffected == 0 {
+			if err := tx.Where("hash = ?", item.Hash).First(item).Error; err != nil {
+				return err
+			}
+		}
+
+		// success
+		return nil
+	})
 }
 
 // FindItemByHash retrieves an item by its hash
@@ -127,4 +133,37 @@ func (d *Database) FindCacheByFeedUrl(feedUrl string, maxAge time.Duration) (*Ca
 	}
 
 	return &cache, nil
+}
+
+func (d *Database) FindCacheByID(id uint) (*Cache, error) {
+	var cache Cache
+	err := d.db.First(&cache, id).Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// No matching record found, return nil without error
+			return nil, nil
+		}
+		// Other errors should be returned
+		return nil, err
+	}
+
+	return &cache, nil
+}
+
+func (d *Database) FindAllCaches() ([]Cache, error) {
+	var caches []Cache
+	err := d.db.
+		First(&caches).Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// No matching record found, return nil without error
+			return nil, nil
+		}
+		// Other errors should be returned
+		return nil, err
+	}
+
+	return caches, nil
 }

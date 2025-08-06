@@ -31,8 +31,8 @@ var _ = Service("web", func() {
 		Description("Returns the feed with the given xml")
 
 		Payload(func() {
-			Attribute("feed_id", String, "Feed Id", func() {
-				Example("some-id")
+			Attribute("feed_id", UInt, "Feed Id", func() {
+				Example(123)
 			})
 			Required("feed_id")
 		})

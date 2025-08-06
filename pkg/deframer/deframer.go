@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/avast/retry-go"
 	"github.com/egandro/news-deframer/pkg/config"
 	"github.com/egandro/news-deframer/pkg/database"
 	"github.com/egandro/news-deframer/pkg/downloader"
@@ -15,6 +16,7 @@ import (
 	"github.com/egandro/news-deframer/pkg/source"
 	"github.com/gorilla/feeds"
 	"github.com/mmcdole/gofeed"
+	"goa.design/clue/log"
 )
 
 const maxAge = time.Minute * 90
@@ -32,6 +34,8 @@ type Deframer interface {
 	UpdateFeeds() (int, error)
 	DeframeFeed(parsedData *gofeed.Feed, feed source.Feed) (string, error)
 	DeframeItem(item *gofeed.Item, feed source.Feed) (*gofeed.Item, error)
+	FindAllCaches() ([]database.Cache, error)
+	FindCacheByID(id uint) (*database.Cache, error)
 }
 
 // NewDeframer initializes a new deframer
@@ -127,7 +131,7 @@ func (d *deframer) UpdateFeeds() (int, error) {
 
 func (d *deframer) DeframeFeed(parsedData *gofeed.Feed, feed source.Feed) (string, error) {
 	// Update channel title with prefix
-	prefix := "[Prefix] "
+	prefix := "[Deframed] "
 	parsedData.Title = prefix + parsedData.Title
 
 	newFeed := &feeds.Feed{
@@ -240,6 +244,7 @@ func (d *deframer) DeframeItem(item *gofeed.Item, feed source.Feed) (*gofeed.Ite
 		return nil, err
 	}
 
+	dbItem.Hash = hash
 	err = d.db.CreateItem(dbItem)
 	if err != nil {
 		return nil, err
@@ -252,6 +257,14 @@ func (d *deframer) DeframeItem(item *gofeed.Item, feed source.Feed) (*gofeed.Ite
 	item.Content = dbItem.Content
 
 	return item, err
+}
+
+func (d *deframer) FindAllCaches() ([]database.Cache, error) {
+	return d.db.FindAllCaches()
+}
+
+func (d *deframer) FindCacheByID(id uint) (*database.Cache, error) {
+	return d.db.FindCacheByID(id)
 }
 
 func (d *deframer) deframeItemInternal(item *gofeed.Item, feed source.Feed) (*database.Item, error) {
@@ -278,14 +291,31 @@ func (d *deframer) deframeItemInternal(item *gofeed.Item, feed source.Feed) (*da
 	system = strings.ReplaceAll(system, "$TITLE", item.Title)
 	system = strings.ReplaceAll(system, "$DESCRIPTION", item.Description)
 
-	resultString, err := d.ai.Query(d.ctx, user, system)
-	if err != nil {
-		return nil, err
-	}
+	const maxRetry = 3
+	var resultAny interface{}
 
-	resultAny, err := d.ai.FuzzyParseJSON(resultString)
+	err := retry.Do(
+		func() error {
+			resultString, err := d.ai.Query(d.ctx, user, system)
+			if err != nil {
+				return err
+			}
+
+			// this is guessing - run the Query again until the result is ok
+			resultAny, err = d.ai.FuzzyParseJSON(resultString)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		},
+		retry.Attempts(maxRetry),
+	)
+
 	if err != nil {
-		return nil, err
+		//return nil, err
+		// only log - don't fail
+		log.Error(d.ctx, err)
 	}
 
 	title_corrected := ""
