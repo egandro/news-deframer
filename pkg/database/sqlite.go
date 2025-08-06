@@ -154,7 +154,7 @@ func (d *Database) FindCacheByID(id uint) (*Cache, error) {
 func (d *Database) FindAllCaches() ([]Cache, error) {
 	var caches []Cache
 	err := d.db.
-		First(&caches).Error
+		Find(&caches).Error
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
