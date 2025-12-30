@@ -23,9 +23,11 @@ This allows you to see the "BS level" of an article directly in your favorite RS
 
 ## Future Vision
 
-While this project currently operates as an RSS proxy, the long-term goal is to develop a browser plugin. This plugin would overlay framing scores and neutral headlines directly on news websites (e.g., as an overlay).
+While this project currently operates as an RSS proxy, the goal is to develop a browser plugin. This plugin would overlay framing scores and neutral headlines directly on news websites (e.g., as an overlay).
 
 Currently, the computational power required for high-quality LLM analysis makes a server-side proxy the most viable solution compared to running heavy models directly within a browser extension.
+
+Check [algorithm](docs/ALGORITHM.md) document for more details.
 
 ## Configuration
 
