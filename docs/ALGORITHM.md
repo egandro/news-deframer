@@ -55,6 +55,13 @@ The service functions as a proxy and content "washer". It retrieves an upstream 
     -   **Description**: Prepended with score summaries and reasoning.
     -   **Use Case**: Allows the proxy to function as a drop-in replacement for standard RSS readers without custom plugin support.
 
+Example:
+
+```bash
+ORIGINAL_URL=https://rss.cnn.com/rss/edition.rss
+URL_ENCODED=$(echo -n "${ORIGINAL_URL}" | jq -sRr @uri)
+REPLACEMENT_URL="https://deframer.example.com/?url=${URL_ENCODED&embedded=true&max_score=0.5"
+```
 
 ## Example Data
 
