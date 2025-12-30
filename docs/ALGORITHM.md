@@ -131,7 +131,7 @@ The data collected and cached via the RSS ingestion pipeline can be leveraged by
 Ad blockers already utilize lists to identify websites requiring client-side intervention. This architecture allows for the following enhancements:
 
 1.  **Configuration**: The ad blocker configuration includes a flag indicating if a specific domain (e.g., `https://www.example.com`) is supported by the Deframer proxy.
-2.  **Lookup Strategy**: When a user visits a page or sub-page (e.g., `/foo`), the extension queries the local cache or the proxy service to check if that specific path corresponds to an analyzed feed item.
+2.  **Lookup Strategy**: When a user visits a flagged domain sub-page (e.g., `/foo`), the extension queries the local cache or the proxy service to check if that specific path corresponds to an analyzed feed item.
 
 ### Interaction Handling
 
