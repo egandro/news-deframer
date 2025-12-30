@@ -61,6 +61,8 @@ The application is configured via a JSON source file (e.g., `source.json`).
 }
 ```
 
+Check the `example.env` for Adding your LLM.
+
 ## Development
 
 This project is written in **Go**.
