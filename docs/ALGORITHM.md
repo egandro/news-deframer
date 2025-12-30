@@ -6,6 +6,8 @@ This specification defines an algorithm for detecting **clickbait**, **framing**
 
 The current implementation targets **Latin-script languages**. The architecture is modular, allowing for adaptation to other writing systems (e.g., logographic scripts like Chinese) through the integration of language-specific NLP models.
 
+The data can be utilized by Ad Blockers or privacy-focused browsers (e.g., Brave) to block or warn users about pages with high framing scores.
+
 ## Input Specification
 
 The system utilizes **[RSS 2.0](https://cyber.harvard.edu/rss/rss.html)** feeds as the primary data ingestion vector. RSS is an established XML-based standard that facilitates platform-agnostic content distribution.
