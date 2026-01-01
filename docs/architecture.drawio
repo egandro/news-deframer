@@ -1,0 +1,175 @@
+<mxfile host="65bd71144e">
+    <diagram id="SDVMppvfBYmxBpEB8rmz" name="Page-1">
+        <mxGraphModel dx="1751" dy="929" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="4" style="edgeStyle=none;html=1;entryX=0.929;entryY=0.739;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="2" target="13">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="230" y="175" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7" style="edgeStyle=none;html=1;" edge="1" parent="1" source="2" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="News Site:&amp;nbsp;&lt;div&gt;https://www.example.com&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/general/Website_Staging.svg;" vertex="1" parent="1">
+                    <mxGeometry x="440" y="115" width="109.71" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Service: html2rss" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;" vertex="1" parent="1">
+                    <mxGeometry x="730" y="125" width="121.95" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="1) RSS&lt;div&gt;Feed is provided&lt;div&gt;by the source&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="280" y="80" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="2) Source has no&lt;div&gt;RSS Feed&lt;/div&gt;&lt;div&gt;we create one&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="590" y="80" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" style="edgeStyle=none;html=1;" edge="1" parent="1" source="9" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="This is a scaper&lt;div&gt;that extracts data from a website and creates an RSS feed.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="910" y="132.5" width="150" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="114.93000000000006" y="1390" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="Source" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="40" width="1080" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;New Site RSS Feed&lt;/span&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;br style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;https://rss.example.com&lt;/div&gt;" style="shape=mxgraph.signs.tech.rss;html=1;pointerEvents=1;fillColor=#000000;strokeColor=none;verticalLabelPosition=bottom;verticalAlign=top;align=center;" vertex="1" parent="32">
+                    <mxGeometry x="100" y="85" width="70" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="RSS Deframer Proxy" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="320" width="1080" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="Deframer RSS Proxy" style="dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.webicons.rss;fillColor=#FDE532;gradientColor=#F4600D" vertex="1" parent="33">
+                    <mxGeometry x="432.06" y="20" width="70" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="AI result&lt;div&gt;Cache&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" vertex="1" parent="33">
+                    <mxGeometry x="120" y="104.38" width="100" height="103.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;{&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&amp;nbsp; &amp;nbsp; &quot;url&quot;: &quot;https://example.com/2026/01/article1.html&quot;,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&amp;nbsp; &amp;nbsp; &quot;title_corrected&quot;: &quot;Title corrected by AI&quot;,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&amp;nbsp; &amp;nbsp; &quot;description_corrected&quot;: &quot;Title corrected by AI&quot;,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&amp;nbsp; &amp;nbsp; &quot;clickbait&quot;: 0.2,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&amp;nbsp; &amp;nbsp; &quot;framing&quot;: 0.4,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&amp;nbsp; &amp;nbsp; &quot;persuasive_intent&quot;: 0.3,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&amp;nbsp; &amp;nbsp; &quot;hyper_stimulus&quot;: 0.1&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;}&lt;/font&gt;&lt;/div&gt;" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;align=left;spacingLeft=17;spacingTop=27;" vertex="1" parent="33">
+                    <mxGeometry x="720" y="80" width="320" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="" style="points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;fillColor=#FF6A00;strokeColor=none;shape=mxgraph.alibaba_cloud.mps-ai;" vertex="1" parent="33">
+                    <mxGeometry x="432.06" y="130" width="52.2" height="52.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" style="edgeStyle=none;html=1;entryX=0.639;entryY=0.123;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="33" source="12" target="20">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" style="edgeStyle=none;html=1;entryX=0.008;entryY=0.433;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="33" source="20" target="18">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="33" source="20" target="16">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="Only One AI call is required per URL / Article&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="33">
+                    <mxGeometry x="320" y="196.25" width="350" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="Unframed / Wasched&lt;div&gt;Articles&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="245.07" y="1390" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="Acts as Proxy / Gateway for (selective) RSS Feeds" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="600" width="1080" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="RSS Reader" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="720" width="400" height="640" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="Mobile RSS&lt;div&gt;Reader&lt;/div&gt;" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.mobile_client;fillColor=#D2D3D3;gradientColor=none;" vertex="1" parent="49">
+                    <mxGeometry x="50" y="55" width="60" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="Desktop RSS Reader" style="html=1;whiteSpace=wrap;strokeColor=none;fillColor=#0079D6;labelPosition=center;verticalLabelPosition=middle;verticalAlign=top;align=center;fontSize=12;outlineConnect=0;spacingTop=-6;fontColor=#FFFFFF;sketch=0;shape=mxgraph.sitemap.news;" vertex="1" parent="49">
+                    <mxGeometry x="180" y="60" width="180" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="Any RSS Reader works out of the box&lt;div&gt;only a Proxy URL is needed.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="49">
+                    <mxGeometry x="25" y="200" width="350" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="Web Browser e.g. brave.com" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
+                    <mxGeometry x="490" y="1020" width="640" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="We need a tiny extension to the Ad Blocker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="52">
+                    <mxGeometry x="17.94" y="40" width="282.06" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="List of Websites the User is interssted in having investigaged:&lt;div&gt;&lt;ul style=&quot;padding-right: 0px; padding-left: 40px;&quot;&gt;&lt;li&gt;foo.com&lt;/li&gt;&lt;li&gt;bar.com&lt;/li&gt;&lt;li&gt;example.com&lt;/li&gt;&lt;/ul&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="52">
+                    <mxGeometry x="17.94" y="120" width="172.06" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="is (document.href) in&amp;nbsp;&lt;div&gt;Sites of Interest?&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="52">
+                    <mxGeometry x="280" y="240" width="150" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="is current page locally blocked?" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="52">
+                    <mxGeometry x="280" y="140" width="150" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="Ask the unframer&lt;div&gt;service&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="52">
+                    <mxGeometry x="420" y="60" width="150" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" style="edgeStyle=none;html=1;entryX=0.185;entryY=0.969;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="49" target="48">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/general/Heart.svg;" vertex="1" parent="1">
+                    <mxGeometry x="165.43" y="1390" width="64" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="12" target="13">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="175" y="375"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="61" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;Acts as RSS Reader&amp;nbsp;&amp;nbsp;&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="58">
+                    <mxGeometry x="-0.393" y="4" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="59" style="edgeStyle=none;html=1;entryX=0.491;entryY=0.992;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="12" target="5">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="790" y="375"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="60" value="&amp;nbsp; &amp;nbsp;Acts as RSS Reader&amp;nbsp; &amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="59">
+                    <mxGeometry x="-0.1125" relative="1" as="geometry">
+                        <mxPoint x="-29" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="78" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="48">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="580" y="800" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="63" value="Unframer Service" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="490" y="800" width="630" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="Ask the Proxy" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="63">
+                    <mxGeometry x="260" y="80" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="What we really want: Every Page from a News Site of interesst qualified and deframed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+                    <mxGeometry x="780" y="690" width="330" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="400" y="1520" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" style="edgeStyle=none;html=1;" edge="1" parent="1" source="66">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="840" y="1360" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="66" value="" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.browserWindow;rSize=0;strokeColor=#666666;strokeColor2=#008cff;strokeColor3=#c4c4c4;mainText=,;recursiveResize=0;" vertex="1" parent="1">
+                    <mxGeometry x="570" y="1420" width="540" height="310" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="Page 1" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.anchor;fontSize=17;fontColor=#666666;align=left;whiteSpace=wrap;" vertex="1" parent="66">
+                    <mxGeometry x="60" y="12" width="110" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="https://www.example.com/2026/article1.html" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.anchor;rSize=0;fontSize=17;fontColor=#666666;align=left;" vertex="1" parent="66">
+                    <mxGeometry x="130" y="60" width="250" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" style="edgeStyle=none;html=1;entryX=0.034;entryY=0.403;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="65" target="66">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="76" target="63">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
