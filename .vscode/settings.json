@@ -1,9 +1,0 @@
-{
-  "go.testEnvFile": "${workspaceFolder}/.env",
-  "go.testFlags": [
-    "-count=1"
-  ],
-  "go.testEnvVars": {
-    "PROJECT_ROOT": "${workspaceFolder}"
-  }
-}
